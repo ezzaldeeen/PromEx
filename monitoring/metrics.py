@@ -42,6 +42,7 @@ def create_requests_processing_time_metric(prefix: str) -> Histogram:
         "requests_processing_time_seconds",
         "Histogram of requests processing time by path (in seconds)",
         ["method", "path_template"],
+        buckets=(.25, .5, .75, 1.),
         namespace=prefix
     )
 

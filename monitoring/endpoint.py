@@ -10,12 +10,19 @@ from starlette.responses import Response
 
 
 def metrics(_: Request) -> Response:
+    """
+    Metrics routing to establish the collector registry
+    :param _:
+    :return:
+    """
     if "prometheus_multiproc_dir" in os.environ:
         registry = CollectorRegistry()
         MultiProcessCollector(registry)
     else:
         registry = REGISTRY
-
     return (
-        Response(generate_latest(registry), headers={"Content-Type": CONTENT_TYPE_LATEST})
+        Response(generate_latest(registry),
+                 headers={
+                     "Content-Type": CONTENT_TYPE_LATEST
+                 })
     )

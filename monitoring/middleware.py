@@ -1,13 +1,12 @@
 import time
 from typing import Tuple
 
-from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
 from starlette.requests import Request
 from starlette.responses import Response
 from starlette.routing import Match
-from starlette.status import HTTP_500_INTERNAL_SERVER_ERROR
-from starlette.types import ASGIApp
+from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
 from starlette.exceptions import HTTPException
+from starlette.types import ASGIApp
 
 from monitoring.metrics import (
     create_request_metric,
@@ -42,7 +41,8 @@ class PrometheusMiddleware(BaseHTTPMiddleware):
         self.exceptions_total = create_exceptions_total_metric(prefix)
 
     async def dispatch(
-            self, request: Request, call_next: RequestResponseEndpoint
+            self, request: Request,
+            call_next: RequestResponseEndpoint
     ) -> Response:
         """
         actual middleware execution scope
@@ -58,11 +58,13 @@ class PrometheusMiddleware(BaseHTTPMiddleware):
             return await call_next(request)
 
         self.requests_in_progress.labels(
-            method=method, path_template=path_template
+            method=method,
+            path_template=path_template
         ).inc()
 
         self.requests_counter.labels(
-            method=method, path_template=path_template
+            method=method,
+            path_template=path_template
         ).inc()
 
         before_time = time.perf_counter()
