@@ -1,2 +1,2 @@
 # PromEx
-Experimentations with Prometheus
+Experimentation with Prometheus
